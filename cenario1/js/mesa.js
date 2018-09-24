@@ -23,7 +23,7 @@ function createBall(x,y,z) {
 
 function addTableTop(obj, x,y,z) {
     'use strict';
-    var geometry = new THREE.CubeGeometry(60,2,20);
+    var geometry = new THREE.CubeGeometry(70,3,40);
     var mesh = new THREE.Mesh(geometry,material);
     mesh.position.set(x,y,z);
     
@@ -32,9 +32,9 @@ function addTableTop(obj, x,y,z) {
 
 function addTableLeg(obj, x,y,z) {
     'use strict';
-    var geometry = new THREE.CubeGeometry(2,6,2);
+    var geometry = new THREE.CylinderGeometry(2,2,20,10,10);
     var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(x,y-3,z);
+    mesh.position.set(x,y,z);
     
     obj.add(mesh);
 }
@@ -45,11 +45,11 @@ function createTable(x,y,z) {
 
     material = new THREE.MeshBasicMaterial({color:0x00ff00, wireframe: true});
     
-    addTableTop(table, 0,0,0);
-    addTableLeg(table, -25,-1,-8);
-    addTableLeg(table, -25,-1,8);
-    addTableLeg(table, 25,-1,8);
-    addTableLeg(table, 25,-1,-8);
+    addTableTop(table, 0,17.5,0);
+    addTableLeg(table, -20,6,-15);
+    addTableLeg(table, -20,6,15);
+    addTableLeg(table, 20,6,15);
+    addTableLeg(table, 20,6,-15);
     
     scene.add(table);
 
@@ -58,10 +58,51 @@ function createTable(x,y,z) {
     table.position.z = z;
 }
 
+
+
+
+function addChairBase(obj, x,y,z) {
+    'use strict';
+    var geometry = new THREE.CubeGeometry(10,1,10);
+    var material = new THREE.MeshBasicMaterial({color:0x4f74af, wireframe: true});
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(x,y,z);
+    
+    obj.add(mesh);
+}
+
+function addChairBack(obj, x,y,z) {
+    'use strict';
+    var geometry = new THREE.CubeGeometry(10,12,1);
+    var material = new THREE.MeshBasicMaterial({color:0x4f74af, wireframe: true});
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(x,y,z);
+    
+    obj.add(mesh);
+}
+
+function createChair(x,y,z) {
+    'use strict';
+    var chair = new THREE.Object3D();
+    
+    addChairBase(chair, 0,0,0);
+    addChairBack(chair, 0,6,5);
+
+    chair.position.x = x;
+    chair.position.y = y;
+    chair.position.z = z;
+
+    scene.add(chair);
+}
+
+
+
 function createCamera() {
     'use strict';
                     // PerspectiveCamera(fov, ratio, near clipping plane, far clipping plane)
-    camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight, 1, 1000);
+    //camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight, 1, 1000);
+    //OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
+    camera = new THREE.OrthographicCamera(-window.innerWidth/10,window.innerWidth/10,window.innerHeight/10,-window.innerHeight/10,0.001,10000);
     camera.position.x = 50;
     camera.position.y = 50;
     camera.position.z = 50;
@@ -73,6 +114,7 @@ function createScene() {
     scene = new THREE.Scene();
     scene.add(new THREE.AxisHelper(10));
     createTable(0,0,0);
+    createChair(0,0,20);
     createBall(0,0,15);
 }
 
