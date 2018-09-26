@@ -9,7 +9,7 @@ function createBall(x,y,z) {
     'use strict';
 
     ball = new THREE.Object3D();
-    ball.userData = { moving: {x:false,y:false,z:false}, speed: {x: 0, y: 0, z: 0}, step: 0};
+    ball.userData = { moving: {x:false,y:false,z:false}, speed: {x: 0, y: 0, z: 0}, moveKeys: {up:false, down:false, right: false, left: false}, step: 0};
 
     var material = new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true});
 
@@ -66,6 +66,27 @@ function onKeyDown(e) {
     'use strict';
 
     switch(e.keyCode) {
+
+        case 37: //left
+        ball.userData.moving.x = true;
+        ball.userData.moveKeys.left = true;
+        
+        break;
+    case 39: //right
+        ball.userData.moving.x = true;
+        ball.userData.moveKeys.right = true;
+        break;
+
+    case 38: //up
+        ball.userData.moving.z = true;
+        ball.userData.moveKeys.up = true;
+        break;
+    case 40: //down
+        ball.userData.moving.z = true;
+        ball.userData.moveKeys.down = true;
+        break;
+
+
     case 65: //A
     case 97: //a
         scene.traverse(function (node) {
@@ -75,21 +96,6 @@ function onKeyDown(e) {
         });
         break;
 
-    // start speed boost
-    /*switch(e.keyCode) {
-    
-        case 37: //left
-            if (ball.userData.moving.x == false) {
-                ball.userData.speed.x -= 0.4;
-            }
-            break;
-        case 39: //right
-            if (ball.userData.moving.x == false) {
-                ball.userData.speed.x += 0.4;
-            }
-            break;
-        }
-    */
 
     }
     //render();
@@ -107,34 +113,37 @@ function onKeyPress(e) {
     */
 
     switch(e.keyCode) {
-    
+    /*
     case 37: //left
         ball.userData.moving.x = true;
-        if (ball.userData.speed.x > -0.6) {
-            ball.userData.speed.x -= 0.02;
+        if (ball.userData.speed.x > -0.4) {
+            ball.userData.speed.x -= 0.06;
         }
         break;
     case 39: //right
         ball.userData.moving.x = true;
-        if (ball.userData.speed.x < 0.6) {
-            ball.userData.speed.x += 0.02;
+        if (ball.userData.speed.x < 0.4) {
+            ball.userData.speed.x += 0.06;
         }
         break;
     
 
     case 38: //up
         ball.userData.moving.z = true;
-        if (ball.userData.speed.z > -0.6) {
-            ball.userData.speed.z -= 0.02;
+        if (ball.userData.speed.z > -0.4) {
+            ball.userData.speed.z -= 0.06;
         }
         break;
     case 40: //down
         ball.userData.moving.z = true;
-        if (ball.userData.speed.z < 0.6) {
-            ball.userData.speed.z += 0.02;
+        if (ball.userData.speed.z < 0.4) {
+            ball.userData.speed.z += 0.06;
         }
         break;
+        */
     }
+    
+   
 }
 
 function onKeyUp(e) {
@@ -144,17 +153,21 @@ function onKeyUp(e) {
     
     case 37: //left
         ball.userData.moving.x = false;
+        ball.userData.moveKeys.left = false;
         //ball.userData.speed.x = 0;
         break;
     case 39: //right
         ball.userData.moving.x = false;
+        ball.userData.moveKeys.right = false;
         //ball.userData.speed.x = 0;
         break;
     case 38: //up
         ball.userData.moving.z = false;
+        ball.userData.moveKeys.up = false;
         break;
     case 40: //down
         ball.userData.moving.z = false;
+        ball.userData.moveKeys.down = false;
         break;
     }
 }
@@ -162,8 +175,22 @@ function onKeyUp(e) {
 function animate() {
     'use strict';
 
-    
+    console.log(ball.userData.speed.x);
+    if (ball.userData.moveKeys.right) {
+        ball.userData.speed.x += 0.03;
+    }
+    if (ball.userData.moveKeys.left) {
+        ball.userData.speed.x -= 0.03;
+    }
+    if (ball.userData.moveKeys.up) {
+        ball.userData.speed.z -= 0.03;
+    }
+    if (ball.userData.moveKeys.down) {
+        ball.userData.speed.z += 0.03;
+    }
+
     if (ball.userData.speed.x != 0 && ball.userData.moving.x == false) {
+
         if (Math.abs(ball.userData.speed.x) > 0.01) {
             ball.userData.speed.x *= 0.9;
         }
@@ -171,6 +198,7 @@ function animate() {
             ball.userData.speed.x = 0;
         }
     }
+    
     if (ball.userData.speed.z != 0 && ball.userData.moving.z == false) {
         if (Math.abs(ball.userData.speed.z) > 0.01) {
             ball.userData.speed.z *= 0.9;

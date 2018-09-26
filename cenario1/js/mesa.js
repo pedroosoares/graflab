@@ -81,10 +81,63 @@ function addChairBack(obj, x,y,z) {
     obj.add(mesh);
 }
 
+function addChairPole(obj, x,y,z) {
+    'use strict';
+    var geometry = new THREE.CylinderGeometry( 1.2, 1.2, 8, 16 );
+    var material = new THREE.MeshBasicMaterial({color:0xffc126, wireframe: true});
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(x,y,z);
+    
+    obj.add(mesh);
+}
+
+function addChairHorizontal(obj, x,y,z, rot) {
+    'use strict';
+    //var geometry = new THREE.CubeGeometry( 10, 1.2, 1.2 );
+    var geometry = new THREE.CylinderGeometry( 0.6, 0.6, 8, 16 );
+    var material = new THREE.MeshBasicMaterial({color:0xffc126, wireframe: true});
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(x,y,z);
+
+    //var axis = new THREE.Vector3( x, y, z ).normalize(); // create once and reuse it
+    //object.rotateOnAxis( axis, radians );
+    
+    //mesh.rotation.set(0,rot,0);
+    mesh.rotateY( rot );
+    mesh.rotateZ( Math.PI / 2 );
+
+    obj.add(mesh);
+}
+
+
+function addChairWheel(obj, x,y,z) {
+    'use strict';
+    var geometry = new THREE.SphereGeometry( 1, 16, 16 );
+    var material = new THREE.MeshBasicMaterial({color:0xff4800, wireframe: true});
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(x,y,z);
+    
+    obj.add(mesh);
+}
+
+
 function createChair(x,y,z) {
     'use strict';
     var chair = new THREE.Object3D();
     
+    addChairWheel(chair, 4, -9.5, 0);
+    addChairWheel(chair, -4, -9.5, 0);
+    
+    addChairWheel(chair, 2, -9.5, 2);
+    addChairWheel(chair, -2, -9.5, 2);
+    addChairWheel(chair, 2, -9.5, -2);
+    addChairWheel(chair, -2, -9.5, -2);
+
+    addChairHorizontal(chair, 0,-8,0, 2 * Math.PI / 3);
+    addChairHorizontal(chair, 0,-8,0, -2 * Math.PI / 3);
+    addChairHorizontal(chair, 0,-8,0, 0);
+    
+    addChairPole(chair, 0,-4,0);
     addChairBase(chair, 0,0,0);
     addChairBack(chair, 0,6,5);
 
@@ -100,9 +153,9 @@ function createChair(x,y,z) {
 function createCamera() {
     'use strict';
                     // PerspectiveCamera(fov, ratio, near clipping plane, far clipping plane)
-    //camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight, 1, 1000);
     //OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
-    camera = new THREE.OrthographicCamera(-window.innerWidth/10,window.innerWidth/10,window.innerHeight/10,-window.innerHeight/10,0.001,10000);
+    //camera = new THREE.OrthographicCamera(-window.innerWidth/10,window.innerWidth/10,window.innerHeight/10,-window.innerHeight/10,0.001,10000);
     camera.position.x = 50;
     camera.position.y = 50;
     camera.position.z = 50;
